@@ -123,7 +123,7 @@ func (h *handler) UpdateUser(c echo.Context) error {
 
 	user.UpdatedAt = time.Now()
 
-	data, err := h.UserRepository.UpdateUser(id, user)
+	data, err := h.UserRepository.UpdateUser(user)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{
@@ -145,7 +145,7 @@ func (h *handler) DeleteUser(c echo.Context) error {
 			Message: err.Error()})
 	}
 
-	data, err := h.UserRepository.DeleteUser(id, user)
+	data, err := h.UserRepository.DeleteUser(user)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{
