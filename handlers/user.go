@@ -12,15 +12,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type handler struct {
+type userHandler struct {
 	UserRepository repositories.UserRepository
 }
 
-func HandlerUser(UserRepository repositories.UserRepository) *handler {
-	return &handler{UserRepository}
+func HandlerUser(UserRepository repositories.UserRepository) *userHandler {
+	return &userHandler{UserRepository}
 }
 
-func (h *handler) FindUsers(c echo.Context) error {
+func (h *userHandler) FindUsers(c echo.Context) error {
 	users, err := h.UserRepository.FindUsers()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -29,7 +29,7 @@ func (h *handler) FindUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: users})
 }
 
-func (h *handler) GetUser(c echo.Context) error {
+func (h *userHandler) GetUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	user, err := h.UserRepository.GetUser(id)
@@ -40,7 +40,7 @@ func (h *handler) GetUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(user)})
 }
 
-func (h *handler) CreateUser(c echo.Context) error {
+func (h *userHandler) CreateUser(c echo.Context) error {
 	request := new(usersdto.CreateUserRequest)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -66,7 +66,7 @@ func (h *handler) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)})
 }
 
-func (h *handler) UpdateUser(c echo.Context) error {
+func (h *userHandler) UpdateUser(c echo.Context) error {
 	request := new(usersdto.UpdateUserRequest)
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
@@ -100,7 +100,7 @@ func (h *handler) UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)})
 }
 
-func (h *handler) DeleteUser(c echo.Context) error {
+func (h *userHandler) DeleteUser(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	user, err := h.UserRepository.GetUser(id)
